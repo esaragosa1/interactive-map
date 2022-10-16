@@ -13,10 +13,9 @@ const myMap ={
 		});
 		// Add a street map layer
 		L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    	attribution: 
-			'&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-		minZoom: '11',	
-		}).addTo(this.map)
+			maxZoom: 19,
+    		attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'		
+		}).addTo(this.map);
 		//create and add geoloc marker;
 		const marker = L.marker(this.coordinates)
 		marker

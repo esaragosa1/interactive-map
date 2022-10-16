@@ -15,7 +15,7 @@ const myMap ={
 		L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     	attribution: 
 			'&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-		minZoom: '15',	
+		minZoom: '11',	
 		}).addTo(this.map)
 		//create and add geoloc marker;
 		const marker = L.marker(this.coordinates)

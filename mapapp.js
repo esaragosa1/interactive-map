@@ -1,66 +1,92 @@
-//Create variables to set latitude and longitude coordinates
-let userLat=0
-let userLong=0
+//Create map 
+const myMap ={
+	coordinates: [],
+	businesses: [],
+	map: {},
+	markers: {},
 
-// Get user Lat and Long coordinates to pass to makeMap function
+	// create and Initialize the map
+	makeMap() {
+		this.map = L.map('map',{
+		center: this.coordinates,
+		zoom: 11,	
+		});
+		// Add a street map layer
+		L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    	attribution: 
+			'&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+		minZoom: '15'	
+		}).addTo(this.map)
+		//create and add geoloc marker;
+		const marker = L.marker(this.coordinates)
+		marker
+		.addTo(this.map)
+		.bindPopup('<p1><b>You are Here</b></p1>')
+		.openPopup()
+   },
+   // Add Biz markers
+   addMarkers(){
+			for (var i = 0; i < this.businesses.length; i++) {
+				this.markers = L.marker([
+					this.businesses[i].lat,
+					this.businesses[i].long,
+				])
+				.bindPopup(`<p1>${this.businesses[i].name}</p1>`)
+				.addTo(this.map)
+		    }
+		},
+   }
+
+// Get user coordinates 
 async function getCoords(){
 	const pos = await new Promise((resolve, reject) => {
-		navigator.geolocation.getCurrentPosition(resolve, reject)
+			navigator.geolocation.getCurrentPosition(resolve, reject)
 	});
-    userLat=pos.coords.latitude
-    userLong= pos.coords.longitude
-	makeMap(userLat,userLong)
+    return [pos.coords.latitude, pos.coords.longitude]
 }
-
-// create and Initialize the map
-function makeMap (x,y){                
-const myMap = L.map ('map', {
-    center:[x,y],
-    zoom: 12,
-});
-
-// Add a street map layer
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '© OpenStreetMap'
-}).addTo(myMap);
-
-//add a marker
-// Create and add a geolocation marker:
-const marker = L.marker([x, y])
-marker.addTo(myMap).bindPopup('<p1><b>You are Here</b></p1>').openPopup()
-}
-// Add Event listener to form search button to then run a function
-let searchbtn=document.getElementById('search')
-    searchbtn.addEventListener('click', function()
-    {   event.preventDefault()
-        let business= document.getElementById('business').value
-        searchFS(userLat,userLong,business)        
-
-    })
 
 // Function to search businesses nearby
-async function searchFS (userLat, userLong,biztype){
-    let options={
-        method: 'Get',
-        headers : {
-            Accept: 'application/json',
-            Authorization:'fsq3EK8/6H6eGJXVoq7oMhzlLEv6fvJC7tDkmelJpUBORCI='
-        }
-    }  
-    let response= await fetch(`https://api.foursquare.com/v3/places/search?query=${biztype}&ll=${userLat}%2C${userLong}&radius=8048&limit=5`, options)
+async function foursquare (business){
+    const options= {
+        	method: 'GET',
+        	headers : {
+        	Accept: 'application/json',
+        	Authorization:'fsq3yGcMpWTXrv4J7slaRij6SbXd9wSSwQtcgy89x5QTM8M='
+        	}
+    }
+	let limit = 5
+	let lat = myMap.coordinates[0]
+	let lon = myMap.coordinates[1] 
+    let response= await fetch(`https://api.foursquare.com/v3/places/search?query=${business}&limit=${limit}&ll=${lat}%2C${lon}`, options)
     let data = await response.text();
     let parsedData = JSON.parse(data);
     let bizresults = parsedData.results
-    
-    // Need to pass these business results array of objects to a function
-    return bizresults          
+	return businesses
+}    
+// Process Business data
+function processBusinesses(data) {
+	let businesses = data.map((element) => {
+		let location = {
+			name: element.name,
+			lat: element.geocodes.main.latitude,
+			long: element.geocodes.main.longitude
+		};
+		return location
+	})
+	return businesses
 }
-/* Watch video on how to process parsed result and iterate through the objects */
+// window load
+window.onload = async () => {
+	const coords = await getCoords()
+	myMap.coordinates = coords
+	myMap.makeMap()
+}
 
-/* Function to procss the search results. 
-It should go through each object. grab the name, lat and long and place it on the map with a marker
-use the four square APi to read through the data results
-*/
-// Create map
-getCoords()
+// business submit button
+document.getElementById('submit').addEventListener('click', async (event) => {
+	event.preventDefault()
+	let business = document.getElementById('business').value
+	let data = await foursquare(business)
+	myMap.businesses = processBusinesses(data)
+	myMap.addMarkers()
+})

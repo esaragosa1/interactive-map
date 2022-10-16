@@ -5,30 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tailored Travel - Interactive Map App</title>
-    
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.2/dist/leaflet.css"
-     integrity="sha256-sA+zWATbFveLLNqWO2gtiw3HL/lh1giY/Inf1BJ0z14="
-     crossorigin=""/>
-    <script src="mapapp.js" defer></script>
-    <script src="https://unpkg.com/leaflet@1.9.2/dist/leaflet.js"
-     integrity="sha256-o9N1jGDZrf5tS+Ft4gbIK7mYMipq9lqpVJ91xHSyKhg="
-     crossorigin=""></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.2/dist/leaflet.css" integrity="sha256-sA+zWATbFveLLNqWO2gtiw3HL/lh1giY/Inf1BJ0z14=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.2/dist/leaflet.js" integrity="sha256-o9N1jGDZrf5tS+Ft4gbIK7mYMipq9lqpVJ91xHSyKhg=" crossorigin=""></script>
+    <script src="https://unpkg.com/@unfolded/map-sdk/dist/unfolded-sdk.min.js"></script>
    <style>
-   #map { 
-       height: 400px;
-       background-color: #ccc; 
-    }
-    #map::before{
-        content: 'LOADING';
-        font-size: 3em;
-        text-align: center;
-        width: 100%;
-        position: absolute;
-        margin-top: 3em;
-    }
-    .leaflet-popup-content-wrapper{
-        width: 100%;
-    }
+     body {
+        padding: 0;
+        margin: 0;
+     }
     </style>
 </head>
 <body>
@@ -42,6 +26,7 @@
     </select>
     <button id="submit">Submit</button>
 </form>
- <div id="map"></div>
+ <div id="map" style="height: 100vh"></div>
+ <scrypt type="module" src="mapapp.js"></scrypt>
 </body>
 </html>

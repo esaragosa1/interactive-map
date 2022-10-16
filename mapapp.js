@@ -15,7 +15,7 @@ const myMap ={
 		L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     	attribution: 
 			'&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-		minZoom: '15'	
+		minZoom: '15',	
 		}).addTo(this.map)
 		//create and add geoloc marker;
 		const marker = L.marker(this.coordinates)
@@ -34,8 +34,8 @@ const myMap ={
 				.bindPopup(`<p1>${this.businesses[i].name}</p1>`)
 				.addTo(this.map)
 		    }
-		},
-   }
+	},
+ }
 
 // Get user coordinates 
 async function getCoords(){
@@ -58,8 +58,8 @@ async function foursquare (business){
 	let lat = myMap.coordinates[0]
 	let lon = myMap.coordinates[1] 
     let response= await fetch(`https://cors-anywhere.herokuapp.com/https://api.foursquare.com/v3/places/search?query=${business}&limit=${limit}&ll=${lat}%2C${lon}`, options)
-    let data = await response.text();
-    let parsedData = JSON.parse(data);
+    let data = await response.text()
+    let parsedData = JSON.parse(data)
     let bizresults = parsedData.results
 	return businesses
 }    
